@@ -20,6 +20,8 @@
         vm.regUser = {};
         // useDetails for login
         vm.getUser = {};
+        // color to show password strength
+        vm.color = {};
         vm.isResetPassword = false;
         // form error
         vm.isFormError = false;
@@ -115,9 +117,10 @@
                                 }
 
                             } catch (error) {
-                                console.log(error);
+                                $rootScope.notify("error", error);
                             }
                         }
+
                         vm.stopLoader();
                     }
                 };
@@ -146,7 +149,7 @@
                             if ($rootScope.previousState) {
                                 $state.go($rootScope.previousState);
                                 vm.stopLoader();
-                            }else {
+                            } else {
                                 $state.go('web.dashboard');
                             }
                         } else {
@@ -163,7 +166,7 @@
                                     vm.FormError = response.data.non_field_errors[0];
                                 }
                             } catch (error) {
-                                console.log(error);
+                                $rootScope.notify("error", error);
                             }
                         }
                         vm.stopLoader();
@@ -173,6 +176,14 @@
             } else {
                 vm.stopLoader();
             }
+        };
+
+
+        // function to check password strength
+        vm.checkStrength = function(password) {
+            var passwordStrength = utilities.passwordStrength(password);
+            vm.message = passwordStrength[0];
+            vm.color = passwordStrength[1];
         };
 
         // function to Verify Email
